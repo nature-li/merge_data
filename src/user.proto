@@ -1,0 +1,14 @@
+// syntax = "proto2";
+
+package mtad;
+option py_generic_services = true;
+option cc_generic_services = true;
+
+message UserInfo {
+  optional int32 age = 1;
+  optional int32 gender = 2;
+  optional int32 marital_status = 3; // 婚育状态
+  repeated int32 occupation = 4; // 身份职业
+  repeated int32 hobby = 5; // 兴趣爱好
+  optional int32 phone_brand = 6; // 手机品牌
+}
