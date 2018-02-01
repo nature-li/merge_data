@@ -67,7 +67,7 @@ class PhoenixHandler(object):
     def clear_add_table(self):
         try:
             last_device_id = ' '
-            limit = 100000
+            limit = 1000000
             total_count = 0
             while True:
                 sql = "SELECT device_id FROM %s WHERE DEVICE_ID > '%s' LIMIT 1 OFFSET %s" \
