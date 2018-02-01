@@ -66,27 +66,17 @@ class PhoenixHandler(object):
 
     def clear_add_table(self):
         try:
-            last_device_id = ' '
             limit = 10000000
             total_count = 0
             while True:
-                sql = "SELECT device_id FROM %s WHERE DEVICE_ID > '%s' LIMIT 1 OFFSET %s" \
-                      % (self.__db_name_add, last_device_id, limit - 1)
+                sql = "DELETE FROM %s LIMIT %s" % (self.__db_name_add, limit)
                 Logger.info(sql)
                 self.__cursor.execute(sql)
 
                 row = self.__cursor.fetchone()
                 if not row:
-                    sql = "DELETE FROM %s" % self.__db_name_add
-                    Logger.info(sql)
-                    self.__cursor.execute(sql)
-                    Logger.info("get 0 rows, break while loop")
+                    Logger.info("delete 0 rows, break while loop")
                     break
-                last_device_id = row[0]
-
-                sql = "DELETE FROM %s WHERE device_id <= '%s'" % (self.__db_name_add, last_device_id)
-                Logger.info(sql)
-                self.__cursor.execute(sql)
 
                 total_count += self.__cursor.rowcount
                 Logger.info("delete %s rows from %s" % (total_count, self.__db_name_add))
