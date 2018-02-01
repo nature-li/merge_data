@@ -73,8 +73,7 @@ class PhoenixHandler(object):
                 Logger.info(sql)
                 self.__cursor.execute(sql)
 
-                row = self.__cursor.fetchone()
-                if not row:
+                if self.__cursor.rowcount == 0:
                     Logger.info("delete 0 rows, break while loop")
                     break
 
