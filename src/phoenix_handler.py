@@ -77,6 +77,9 @@ class PhoenixHandler(object):
 
                 row = self.__cursor.fetchone()
                 if not row:
+                    sql = "DELETE FROM %s" % self.__db_name_add
+                    Logger.info(sql)
+                    self.__cursor.execute(sql)
                     Logger.info("get 0 rows, break while loop")
                     break
                 last_device_id = row[0]
