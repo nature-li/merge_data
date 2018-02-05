@@ -81,19 +81,21 @@ def __main__():
         Logger.error("FileHandler handler() failed")
         return False
 
-    # connect to phoenix
-    if not phoenix_handler.connect():
-        Logger.error("connect to phoenix failed")
-        return False
-
     # merge data from add table to full table
     if cfg.phoenix.enable and not cfg.phoenix.direct_to_full:
+        if not phoenix_handler.connect():
+            Logger.error("connect to phoenix failed")
+            return False
         if not phoenix_handler.insert_add_to_full_table():
             Logger.error("merge add table to full table failed")
             return False
+        phoenix_handler.close()
 
     # migrate data from phoenix to redis
     if cfg.migrate.enable:
+        if not phoenix_handler.connect():
+            Logger.error("connect to phoenix failed")
+            return False
         # init sentinel
         worker_controller = WorkerController(current_day, cfg.migrate.active_days, phoenix_handler.get_user_tag_key(),
                                              cfg.migrate.migrate_full)
@@ -113,16 +115,18 @@ def __main__():
         if not ret:
             Logger.error("migrate data from phoenix to redis failed")
             return False
+        phoenix_handler.close()
 
     # clear add table
     if cfg.migrate.enable and cfg.migrate.erase_after_migrate:
+        if not phoenix_handler.connect():
+            Logger.error("connect to phoenix failed")
+            return False
         if cfg.migrate.erase_after_migrate:
             if not phoenix_handler.clear_add_table():
                 Logger.error("clear add table failed")
                 return False
-
-    # close phoenix
-    phoenix_handler.close()
+        phoenix_handler.close()
 
     Logger.info("done success")
     return True
